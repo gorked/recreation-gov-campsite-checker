@@ -16,7 +16,7 @@ class RecreationClient:
     )
     MAIN_PAGE_ENDPOINT = BASE_URL + "/api/camps/campgrounds/{park_id}"
 
-    headers = {"User-Agent": UserAgent().random}
+    headers = {"User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'}
 
     @classmethod
     def get_availability(cls, park_id, month_date):

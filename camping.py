@@ -16,6 +16,14 @@ from enums.emoji import Emoji
 from utils import formatter
 from utils.camping_argparser import CampingArgumentParser
 
+from twilio.rest import Client
+
+twilio_client = Client('<TWILIO_ACCOUNT>', '<TWILIO_AUTH>')
+ACCOUNT_ID = '<RECREATION_ACCOUNT_ID>'
+DEST_EMAIL = '<EMAIL>'
+DEST_PHONE = '<PERSONAL_PHONE_NUMBER>'
+TWILIO_PHONE = '<TWILIO_PHONE_NUMBER>'
+
 LOG = logging.getLogger(__name__)
 log_formatter = logging.Formatter(
     "%(asctime)s - %(process)s - %(levelname)s - %(message)s"
@@ -225,6 +233,7 @@ def generate_human_output(
 
         # Displays campsite ID and availability dates.
         if gen_campsite_info and available_dates_by_site_id:
+            notify = 0
             for site_id, dates in available_dates_by_site_id.items():
                 out.append(
                     "  * Site {site_id} is available on the following dates:".format(
@@ -237,6 +246,9 @@ def generate_human_output(
                             start=date["start"], end=date["end"]
                         )
                     )
+                if notify == 0:
+                    twilio_client.messages.create(to=DEST_PHONE, from_=TWILIO_PHONE, body="CAMPSITE!!!\nhttps://www.recreation.gov/camping/campsites/" + str(site_id))
+                    notify +=1
 
     if has_availabilities:
         out.insert(
